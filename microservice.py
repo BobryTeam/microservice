@@ -56,6 +56,7 @@ class Microservice:
             current_timestamp = time.time()
             if current_timestamp - last_queue_check_timestamp > self.queue_check_timer:
                 last_queue_check_timestamp = current_timestamp
+            else:
                 continue
 
             if self.event_queue.empty():
