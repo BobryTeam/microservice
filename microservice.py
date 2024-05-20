@@ -38,8 +38,7 @@ class Microservice:
         '''
         while self.running.is_set() or not self.event_queue.empty():
             if self.event_queue.empty(): continue
-            event_thread = Thread(target=self.handle_event, args=((self.event_queue.get()),))
-            event_thread.start()
+            self.handle_event(self.event_queue.get())
 
     '''
     Пример реализуемого функционала микросервиса:
