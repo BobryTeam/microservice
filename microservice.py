@@ -3,6 +3,8 @@ from typing import Dict
 import threading
 from threading import Thread
 
+import time
+
 from events.event import *
 from events.kafka_event import *
 
@@ -14,6 +16,9 @@ class Microservice:
     Для него должна быть реализована функция `self.handle_event(event: Event)`
     '''
 
+    DEFAULT_QUEUE_CHECK_TIMER = 10.0
+    MINIMAL_QUEUE_CHECK_TIMER = 0.5
+
     def __init__(self, event_queue: Queue, writers: Dict[str, KafkaEventWriter]):
         '''
         Инициализация класса:
@@ -22,6 +27,7 @@ class Microservice:
         Поля класса:
         - `self.event_queue` - очередь приходящих событий
         - `self.writers` - словарь, где ключ - название микросервиса, значение - писатель событий в этот микросервис
+        - `self.queue_check_timer` - кол-во секунд ожидаемое перед каждой проверкой очереди событий
         - `self.running` - мультипоточное булевое значение, указывающее состояние микросервиса
         - `self.runnning_thread` - указатель на поток, в котором запущен микросервис 
         '''
@@ -29,18 +35,32 @@ class Microservice:
         self.event_queue = event_queue
         self.writers = writers
 
+        self.queue_check_timer = self.DEFAULT_QUEUE_CHECK_TIMER
+
         self.running = threading.Event()
         self.running.set()
 
         self.running_thread = Thread(target=self.run)
         self.running_thread.start()
 
+    def set_queue_check_timer(self, seconds: float):
+        self.queue_check_timer = max(seconds, self.MINIMAL_QUEUE_CHECK_TIMER)
+
     def run(self):
         '''
         Принятие событий из очереди 
         '''
+        last_queue_check_timestamp = 0
+
         while self.running.is_set():
-            if self.event_queue.empty(): continue
+            current_timestamp = time.time()
+            if current_timestamp - last_queue_check_timestamp > self.queue_check_timer:
+                last_queue_check_timestamp = current_timestamp
+                continue
+
+            if self.event_queue.empty():
+                continue
+
             self.handle_event(self.event_queue.get())
 
     '''
