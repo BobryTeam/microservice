@@ -52,9 +52,9 @@ class Microservice:
         '''
 
         while self.running.is_set():
-            time.sleep(self.queue_check_timer)
 
             if self.event_queue.empty():
+                time.sleep(self.queue_check_timer)
                 continue
 
             self.handle_event(self.event_queue.get())
