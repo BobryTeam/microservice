@@ -50,14 +50,9 @@ class Microservice:
         '''
         Принятие событий из очереди 
         '''
-        last_queue_check_timestamp = 0
 
         while self.running.is_set():
-            current_timestamp = time.time()
-            if current_timestamp - last_queue_check_timestamp > self.queue_check_timer:
-                last_queue_check_timestamp = current_timestamp
-            else:
-                continue
+            time.sleep(self.queue_check_timer)
 
             if self.event_queue.empty():
                 continue
