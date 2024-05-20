@@ -67,3 +67,4 @@ class Microservice:
 
     def stop(self):
         self.running.clear()
+        self.running_thread.join()
