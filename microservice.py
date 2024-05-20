@@ -18,7 +18,7 @@ class Microservice:
         '''
         Инициализация класса:
         - `event_queue` - очередь приходящих событий
-        - `writers` - словарь, где ключ - название микросервиса, значение - писатель событий в этот микросервис 
+        - `writers` - словарь, где ключ - название микросервиса, значение - писатель событий в этот микросервис
         Поля класса:
         - `self.event_queue` - очередь приходящих событий
         - `self.writers` - словарь, где ключ - название микросервиса, значение - писатель событий в этот микросервис
@@ -39,7 +39,7 @@ class Microservice:
         '''
         Принятие событий из очереди 
         '''
-        while self.running.is_set() or not self.event_queue.empty():
+        while self.running.is_set():
             if self.event_queue.empty(): continue
             self.handle_event(self.event_queue.get())
 
