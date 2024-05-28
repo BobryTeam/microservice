@@ -1,5 +1,7 @@
 from typing import Dict
 
+from queue import Queue
+
 import threading
 from threading import Thread
 
