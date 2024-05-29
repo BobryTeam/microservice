@@ -5,8 +5,8 @@ from threading import Thread
 
 import time
 
-from events.event import *
-from events.kafka_event import *
+from event import *
+from kafka_event import *
 
 
 class Microservice:

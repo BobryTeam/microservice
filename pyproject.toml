@@ -1,0 +1,17 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "microservice"
+version = "2024.26.05"
+description = ""
+authors = ["John Smith <john@example.com>"]
+readme = "README.md"
+packages = [
+    { include = "microservice.py" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+events = {git = "https://github.com/BobryTeam/events.git", branch = "feature/pyproject"}
